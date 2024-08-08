@@ -1,23 +1,41 @@
-﻿using Chat_Warriors.user_management;
+﻿using Chat_Warriors.GameLogic.user_management;
+using Action = Chat_Warriors.GameLogic.user_management.Action;
 
 namespace Chat_Warriors.GameLogic;
 
-public class Game
+public class GameLogic
 {
-    private User _user;
+    private Player _user;
 
-    public Game(User user)
+    public GameLogic(Player user)
     {
         this._user = user;
     }
 
-    public void GoToForest()
+    public async Task GoToForest()
     {
-        // The logic of traveling to the forest
+        if (_user.Energy >= 10 & _user.Status == Condition.ReadyToFight )
+        {
+            _user.Energy -= 10;
+            await _user.ChangeState(Action.GoToForest);
+            _user.Gold += 10;
+            _user.Exp += 5;
+            // TODO: random items 
+        }
+        else
+        {
+            //TODO: print in tg chat about mistake
+        }
     }
 
-    public void AttackCaravan()
+    public async Task AttackCaravan()
     {
-        // The logic of the attack on the caravan
+        if (_user.Energy >= 30 & _user.Status == Condition.ReadyToFight)
+        {
+            _user.Energy -= 30;
+            await _user.ChangeState(Action.AttackCaravan);
+            _user.Exp += 15;
+            //TODO: some logic
+        }
     }
 }

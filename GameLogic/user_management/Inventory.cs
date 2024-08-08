@@ -1,10 +1,10 @@
-﻿namespace Chat_Warriors.user_management;
+﻿namespace Chat_Warriors.GameLogic.user_management;
 
 public class Inventory
 {
-    private readonly User _user;
+    private Player _user;
 
-    public Inventory(User user)
+    public Inventory(Player user)
     {
         this._user = user;
     }

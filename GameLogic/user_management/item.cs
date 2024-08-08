@@ -1,4 +1,4 @@
-﻿namespace Chat_Warriors.user_management;
+﻿namespace Chat_Warriors.GameLogic.user_management;
 
 public class Item
 {
