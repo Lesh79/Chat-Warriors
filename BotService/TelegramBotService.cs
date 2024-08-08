@@ -3,60 +3,55 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Chat_Warriors.BotService;
-
-public class TelegramBotService
+namespace Chat_Warriors.BotService
 {
-    private readonly ITelegramBotClient _botClient;
-
-    public TelegramBotService(string token)
+    public class TelegramBotService
     {
-        _botClient = new TelegramBotClient(token);
-    }
+        private readonly ITelegramBotClient _botClient;
+        private readonly CommandHandler _commandHandler;
 
-    public void Start()
-    {
-        Console.WriteLine("Запущен бот " + _botClient.GetMeAsync().Result.FirstName);
-
-        var cts = new CancellationTokenSource();
-        var cancellationToken = cts.Token;
-        var receiverOptions = new ReceiverOptions
+        public TelegramBotService(string token)
         {
-            AllowedUpdates = { }, // Receive all update types
-        };
+            _botClient = new TelegramBotClient(token);
+            _commandHandler = new CommandHandler(_botClient);
+        }
 
-        _botClient.StartReceiving(
-            HandleUpdateAsync,
-            HandleErrorAsync,
-            receiverOptions,
-            cancellationToken
-        );
-
-        Console.ReadLine();
-        cts.Cancel(); // Stop the bot when closing the application
-    }
-
-    private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
-    {
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
-
-        if (update.Type == UpdateType.Message && update.Message?.Text != null)
+        public void Start()
         {
-            var message = update.Message;
-            if (message.Text.ToLower() == "/start")
+            Console.WriteLine("Запущен бот " + _botClient.GetMeAsync().Result.FirstName);
+
+            var cts = new CancellationTokenSource();
+            var cancellationToken = cts.Token;
+            var receiverOptions = new ReceiverOptions
             {
-                await botClient.SendTextMessageAsync(message.Chat, "Соси мои яйца", cancellationToken: cancellationToken);
-            }
-            else
+                AllowedUpdates = {}, // Receive all update types
+            };
+
+            _botClient.StartReceiving(
+                HandleUpdateAsync,
+                HandleErrorAsync,
+                receiverOptions,
+                cancellationToken
+            );
+
+            Console.ReadLine();
+            cts.Cancel(); // Stop the bot when closing the application
+        }
+
+        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        {
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
+
+            if (update.Type == UpdateType.Message && update.Message?.Text != null)
             {
-                await botClient.SendTextMessageAsync(message.Chat, "Привет-привет!!", cancellationToken: cancellationToken);
+                await _commandHandler.HandleCommandAsync(update.Message);
             }
         }
-    }
 
-    private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
-    {
-        Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
-        return Task.CompletedTask;
+        private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        {
+            Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
+            return Task.CompletedTask;
+        }
     }
 }
