@@ -1,11 +1,11 @@
-﻿using Chat_Warriors.GameLogic.user_management;
-using Action = Chat_Warriors.GameLogic.user_management.Action;
+﻿using Chat_Warriors.GameLogic.player_management;
+using Action = Chat_Warriors.GameLogic.player_management.Action;
 
 namespace Chat_Warriors.GameLogic;
 
 public class GameLogic
 {
-    private Player _user;
+    private readonly Player _user;
 
     public GameLogic(Player user)
     {
@@ -14,7 +14,7 @@ public class GameLogic
 
     public async Task GoToForest()
     {
-        if (_user.Energy >= 10 & _user.Status == Condition.ReadyToFight )
+        if (_user.Energy >= 10 && _user.Status == Condition.ReadyToFight )
         {
             _user.Energy -= 10;
             await _user.ChangeState(Action.GoToForest);
@@ -30,7 +30,7 @@ public class GameLogic
 
     public async Task AttackCaravan()
     {
-        if (_user.Energy >= 30 & _user.Status == Condition.ReadyToFight)
+        if (_user.Energy >= 30 && _user.Status == Condition.ReadyToFight)
         {
             _user.Energy -= 30;
             await _user.ChangeState(Action.AttackCaravan);

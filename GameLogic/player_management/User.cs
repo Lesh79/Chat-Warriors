@@ -1,6 +1,6 @@
-﻿using Action = Chat_Warriors.GameLogic.user_management.Action;
+﻿using Action = Chat_Warriors.GameLogic.player_management.Action;
 
-namespace Chat_Warriors.GameLogic.user_management;
+namespace Chat_Warriors.GameLogic.player_management;
 
 public class Player
 {
@@ -11,7 +11,7 @@ public class Player
     public int Exp { get; set; }
     public int Gold { get; set; }
     public int Energy { get; set; }
-    public List<Item> Inventory { get; set; }
+    // public List<Item> Inventory { get; set; }
 
     public Player(string username)
     {
@@ -20,7 +20,7 @@ public class Player
         Level = 0;
         Gold = 0;
         Energy = 20;
-        Inventory = new List<Item>();
+        // Inventory = new List<Item>();
     }
     public async Task ChangeState(Action action)
     {
