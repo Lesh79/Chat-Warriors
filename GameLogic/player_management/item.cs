@@ -5,7 +5,7 @@ namespace Chat_Warriors.GameLogic.player_management;
 public class Item
 {
     public string Name { get; set; }
-    public int Value { get; set; }
+    public int Price{ get; set; }
     public int PlayerId { get; set; }
     public Player? Player { get; set; }
     
