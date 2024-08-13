@@ -1,18 +1,21 @@
 namespace Chat_Warriors.GameLogic.player_management;
 
-public enum WeaponType{}
+public enum WeaponType
+{
+    Sword,
+    Dagger,
+    Overweight
+}
 
 public class Helmet :Item{
     public int Def { set; get; }
     public double DefPerc { set; get; }
 }
 
-
 public class Chestplate :Item{
     public int Def { set; get; }
     public double DefPerc { set; get; }
 }
-
 
 public class Leggins :Item{
     public int Def { set; get; }
@@ -49,6 +52,14 @@ public class Armour
     }
 }
 
+public class Weapon: Item
+{
+    public WeaponType WeaponType { set; get; }
+    public int Attack { set; get; }
+}
+
+
+
 public class Equipment
 {
     public Armour EquippedArmour(Chestplate chest = null, Leggins legs = null, Helmet helmet = null)
@@ -56,4 +67,5 @@ public class Equipment
         return new Armour(chest, legs, helmet);
     }
 
+    public Weapon EquippedWeapon { set; get; }
 }
