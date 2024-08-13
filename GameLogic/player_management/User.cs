@@ -12,6 +12,7 @@ public class Player
     public int Gold { get; set; }
     public int Energy { get; set; }
     // public List<Item> Inventory { get; set; }
+    public Equipment Equipment { set; get; }
 
     public Player(string username)
     {
