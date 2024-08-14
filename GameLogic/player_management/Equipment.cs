@@ -1,6 +1,6 @@
 namespace Chat_Warriors.GameLogic.player_management;
 
-public enum WeaponType
+public enum WeaponoryType
 {
     Sword,
     Dagger,
@@ -15,7 +15,7 @@ public class Helmet :Item{
         DefPerc = defPerc;
     }
     public int Def { get; set; }
-    public double DefPerc { get; set; }
+    public double DefPerc{ get; set; }
 }
 
 public class Chestplate :Item{
@@ -49,7 +49,7 @@ public class Armour
 
         if (legs != null)
         {
-            Leggins = legs;
+            Leggs = legs;
         }
 
         if (helmet != null)
@@ -60,7 +60,7 @@ public class Armour
 
     public Chestplate Chest { get; set; }
     public Helmet Helm { get; set; }
-    public Leggins Leggins { get; set; }
+    public Leggins Leggs { get; set; }
 
     public int TotalDefence()
     {
@@ -71,9 +71,9 @@ public class Armour
         {
             chestDef = Chest.Def;
         }
-        if (Leggins!= null)
+        if (Leggs!= null)
         {
-            leggDef = Leggins.Def;
+            leggDef = Leggs.Def;
         }if (Helm != null)
         {
             helmDef = Helm.Def;
@@ -84,11 +84,12 @@ public class Armour
 
 public class Weapon: Item
 {
-    public Weapon ( string name, int price, WeaponType weaponType, int attack) : base(name, price){
+    
+    public Weapon ( string name, int price, WeaponoryType weaponType, int attack) : base(name, price){
         WeaponType = weaponType;
         Attack = attack;
     }
-    public WeaponType WeaponType { get; set; }
+    public WeaponoryType WeaponType { get; set; }
     public int Attack { get; set; }
 }
 
@@ -97,17 +98,18 @@ public class Equipment
     public Equipment()
     {
         EquipArmour();
-        
+        EquipWeapon();
     }
 
-    public Armour equipped = new Armour();
-    public void EquipArmour(Chestplate chest = null, Leggins legs = null, Helmet helmet = null)
+    public Armour PlayerArmour = new Armour();
+    public Weapon PlayerWeapon;
+    public void EquipArmour(Chestplate? chest = null, Leggins? legs = null, Helmet? helmet = null)
     {
-        equipped = new Armour(chest, legs, helmet);
+        PlayerArmour = new Armour(chest, legs, helmet);
     }
-    
-    public Weapon EquippedWeapon { get; set; }
-    
-}
 
-//Player.Equipment.EquipedArmour.totaldefence
+    public void EquipWeapon(Weapon? weapon = null)
+    {
+        PlayerWeapon = weapon;
+    }
+}
