@@ -1,6 +1,5 @@
 namespace Chat_Warriors.GameLogic.player_management;
 
-
 public enum WeaponType
 {
     Sword,
@@ -15,8 +14,8 @@ public class Helmet :Item{
         Def = def;
         DefPerc = defPerc;
     }
-    public int Def { set; get; }
-    public double DefPerc { set; get; }
+    public int Def { get; set; }
+    public double DefPerc { get; set; }
 }
 
 public class Chestplate :Item{
@@ -25,8 +24,8 @@ public class Chestplate :Item{
         Def = def;
         DefPerc = defPerc;
     }
-    public int Def { set; get; }
-    public double DefPerc { set; get; }
+    public int Def { get; set; }
+    public double DefPerc { get; set; }
 }
 
 public class Leggins :Item{
@@ -35,8 +34,8 @@ public class Leggins :Item{
         Def = def;
         DefPerc = defPerc;
     }
-    public int Def { set; get; }
-    public double DefPerc { set; get; }
+    public int Def { get; set; }
+    public double DefPerc { get; set; }
 }
 
 public class Armour
@@ -59,13 +58,27 @@ public class Armour
         }
     }
 
-    public Chestplate Chest { set; get; }
-    public Helmet Helm { set; get; }
-    public Leggins Leggins { set; get; }
+    public Chestplate Chest { get; set; }
+    public Helmet Helm { get; set; }
+    public Leggins Leggins { get; set; }
 
     public int TotalDefence()
     {
-        return Chest.Def + Leggins.Def + Helm.Def;
+        int chestDef = 0;
+        int helmDef = 0;
+        int leggDef = 0;
+        if (Chest != null)
+        {
+            chestDef = Chest.Def;
+        }
+        if (Leggins!= null)
+        {
+            leggDef = Leggins.Def;
+        }if (Helm != null)
+        {
+            helmDef = Helm.Def;
+        }
+        return chestDef + leggDef + helmDef;
     }
 }
 
@@ -75,16 +88,26 @@ public class Weapon: Item
         WeaponType = weaponType;
         Attack = attack;
     }
-    public WeaponType WeaponType { set; get; }
-    public int Attack { set; get; }
+    public WeaponType WeaponType { get; set; }
+    public int Attack { get; set; }
 }
 
 public class Equipment
 {
-    public Armour EquippedArmour(Chestplate chest = null, Leggins legs = null, Helmet helmet = null)
+    public Equipment()
     {
-        return new Armour(chest, legs, helmet);
+        EquipArmour();
+        
     }
 
-    public Weapon EquippedWeapon { set; get; }
+    public Armour equipped = new Armour();
+    public void EquipArmour(Chestplate chest = null, Leggins legs = null, Helmet helmet = null)
+    {
+        equipped = new Armour(chest, legs, helmet);
+    }
+    
+    public Weapon EquippedWeapon { get; set; }
+    
 }
+
+//Player.Equipment.EquipedArmour.totaldefence

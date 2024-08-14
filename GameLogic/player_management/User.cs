@@ -22,6 +22,7 @@ public class Player
         Gold = 0;
         Energy = 20;
         // Inventory = new List<Item>();
+        Equipment = new Equipment();
     }
     public async Task ChangeState(Action action)
     {
