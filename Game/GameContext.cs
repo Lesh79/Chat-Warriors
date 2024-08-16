@@ -1,6 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Chat_Warriors.Game.player_management;
+using Microsoft.EntityFrameworkCore;
 
-namespace Chat_Warriors.GameLogic.player_management;
+namespace Chat_Warriors.Game;
 
 public class GameContext: DbContext
 {
@@ -11,10 +12,4 @@ public class GameContext: DbContext
         optionsBuilder.UseSqlite("Data Source=C:/Users/temer/RiderProjects/Chat-Warriors/identifier.sqlite");
     }
     
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Player>()
-
-            .HasKey(p => p.UserId);
-    }
 }

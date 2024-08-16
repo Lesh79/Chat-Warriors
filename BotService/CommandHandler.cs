@@ -1,52 +1,98 @@
-﻿using Chat_Warriors.GameLogic.player_management;
-using Telegram.Bot;
+﻿using Chat_Warriors.Game;
+using Chat_Warriors.Game.player_management;
 using Telegram.Bot.Types;
 
 namespace Chat_Warriors.BotService
 {
-    public class CommandHandler
+    public static class CommandHandler
     {
-        private readonly ITelegramBotClient _botClient;
-
-        public CommandHandler(ITelegramBotClient botClient)
+        public static async Task HandleCommandAsync(Message message)
         {
-            _botClient = botClient;
-        }
-
-
-        public async Task HandleCommandAsync(Message message)
-        {
-            using (var db = new GameContext())
+            await using var db = new GameContext();
+            var chatId = message.Chat.Id;
+            var currentPlayer = db.Players.SingleOrDefault(p => p.Username == message.Chat.Username);
+            switch (message.Text)
             {
-                var chatId = message.Chat.Id;
-                if (message.Text?.ToLower() == "создать персонажа")
+                case "/start":
                 {
-                    var existingPlayer = db.Players.SingleOrDefault(p => p.Username == message.Chat.Username);
-                    if (existingPlayer == null)
+                    await TelegramMessenger.SendMessageAsync(chatId,
+                        $"Доступные команды:\n- /create\n- /hero\n- /forest\n- /attack");
+                    break;
+                }
+                case "/hero":
+                {
+                    if (currentPlayer == null)
+                        await TelegramMessenger.SendMessageAsync(chatId, "Создай персонажа!");
+                    else
                     {
-                        var newPlayer = new Player(message.Chat.Username!);
+                        await TelegramMessenger.SendMessageAsync(chatId,
+                            $"\ud83c\udfb0 Name: \"{currentPlayer.Username}\" " +
+                            $"\n\ud83c\udf15 Status: {currentPlayer.Status}" +
+                            $"\n\ud83d\udd95 Level:{currentPlayer.Level} \n\ud83e\udd47 Gold: " +
+                            $"{currentPlayer.Gold} \n\u26a1\ufe0f Energy: {currentPlayer.Energy}");
+                    }
+
+                    break;
+                }
+                // Hero Initialization
+                case "/create":
+                {
+                    if (currentPlayer == null)
+                    {
+                        var newPlayer = new Player(message.Chat.Username!, chatId);
                         await db.Players.AddAsync(newPlayer);
                         await db.SaveChangesAsync();
                         var addedPlayer = db.Players.SingleOrDefault(p => p.Username == message.Chat.Username);
                         if (addedPlayer != null)
                         {
-                            await _botClient.SendTextMessageAsync(chatId, $"Герой {newPlayer.Username} создан!");
+                            await TelegramMessenger.SendMessageAsync(chatId,
+                                $"Герой {newPlayer.Username} создан!");
                         }
                         else
                         {
-                            await _botClient.SendTextMessageAsync(chatId, "Ошибка при создании персонажа!");
+                            await TelegramMessenger.SendMessageAsync(chatId, "Ошибка при создании персонажа!");
                         }
                     }
-                    else await _botClient.SendTextMessageAsync(chatId, "Персонаж уже существует");
+                    else await TelegramMessenger.SendMessageAsync(chatId, "Персонаж уже существует");
+
+                    break;
                 }
-                else if (message.Text?.ToLower() == "Лес")
+                // The Hero's Travels
+                case "/forest":
                 {
-                    // var gameLogic = new GameLogic.GameLogic(player);
-                    //
-                    // await gameLogic.GoToForest();
-                    //
-                    // await _botClient.SendTextMessageAsync(chatId, $"Вы пошли в лес! Текущий статус: {player.Status}. Ваше золото: {player.Gold}");
+                    if (currentPlayer != null)
+                    {
+                        try
+                        {
+                            await Forest.GoToForest(currentPlayer, db);
+                            await db.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Ошибка сохранения в базу данных: {ex.Message}");
+                            await TelegramMessenger.SendMessageAsync(chatId, 
+                                "Произошла ошибка при сохранении данных.");
+                        }
+                    }
+                    else
+                    {
+                        await TelegramMessenger.SendMessageAsync(chatId,
+                            $"Персонаж не найден! Создайте персонажа командой 'создать персонажа'");
+                    }
+
+                    break;
                 }
+                case "/attack":
+                {
+                    if (currentPlayer != null) db.Players.Remove(currentPlayer);
+                    await db.SaveChangesAsync();
+                    await TelegramMessenger.SendMessageAsync(chatId,
+                        $"Пока что эта залупа будет удалять перса, так надо мне");
+                    break;
+                }
+                default:
+                    await TelegramMessenger.SendMessageAsync(chatId, "ИДИ НАХУЙ ПОКА НИЧЕГО НЕТ");
+                    break;
             }
         }
     }

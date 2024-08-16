@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 
-namespace Chat_Warriors.GameLogic.player_management;
+namespace Chat_Warriors.Game.player_management;
 [Keyless]
 public class Item
 {

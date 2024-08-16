@@ -1,4 +1,4 @@
-﻿namespace Chat_Warriors.GameLogic.player_management;
+﻿namespace Chat_Warriors.Game.player_management;
 
 public enum Condition
 {

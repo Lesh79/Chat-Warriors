@@ -1,7 +1,4 @@
 ﻿using Chat_Warriors.BotService;
-using Telegram.Bot;
-using Telegram.Bot.Polling;
-using Telegram.Bot.Types;
 
 namespace Chat_Warriors;
 
@@ -15,7 +12,7 @@ class Program
     // static async Task Main(string[] args)
     // {
     //     var user = new Player("Huesos");
-    //     var gm = new GameLogic.GameLogic(user);
+    //     var gm = new Game.GameLogic(user);
     //      await gm.GoToForest();
     // }
 }

@@ -8,12 +8,11 @@ namespace Chat_Warriors.BotService
     public class TelegramBotService
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly CommandHandler _commandHandler;
 
         public TelegramBotService(string token)
         {
             _botClient = new TelegramBotClient(token);
-            _commandHandler = new CommandHandler(_botClient);
+            TelegramMessenger.Initialize(_botClient);
         }
 
         public void Start()
@@ -44,7 +43,7 @@ namespace Chat_Warriors.BotService
 
             if (update.Type == UpdateType.Message && update.Message?.Text != null)
             {
-                await _commandHandler.HandleCommandAsync(update.Message);
+                await CommandHandler.HandleCommandAsync(update.Message);
             }
         }
 
