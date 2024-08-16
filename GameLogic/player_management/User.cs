@@ -11,8 +11,13 @@ public class Player
     public int Exp { get; set; }
     public int Gold { get; set; }
     public int Energy { get; set; }
-    // public List<Item> Inventory { get; set; }
+    
+    public Equipment Equiped{ set; get; }
+    
+    public int TotalAttack { get; set; }
 
+    // public List<Item> Inventory { get; set; }
+    
     public Player(string username)
     {
         Username = username;
@@ -21,7 +26,19 @@ public class Player
         Gold = 0;
         Energy = 20;
         // Inventory = new List<Item>();
+        Equiped = new Equipment();
     }
+    
+    
+    
+    public int TotalDefence()
+    {
+        if (Equiped == null)
+            return 0;
+        return Equiped.PlayerArmour.TotalDefence();
+    }
+    
+    
     public async Task ChangeState(Action action)
     {
         if (action == Action.GoToForest)
