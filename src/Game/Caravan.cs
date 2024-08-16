@@ -10,7 +10,6 @@ public static class Caravan
         if (player.Energy >= 30 && player.Status == Condition.ReadyToFight)
         {
             player.Energy -= 30;
-            await player.ChangeState(Action.AttackCaravan, gameContext);
             player.Exp += 15;
             player.CheckExp();
             //TODO: some logic

@@ -25,22 +25,7 @@ public class Player
         Energy = 20;
         // Inventory = new List<Item>();
     }
-    public async Task ChangeState(Action action, GameContext gameContext)
-    {   
-        if (action == Action.GoToForest)
-        {
-            Status = Condition.InForest;
-            await gameContext.SaveChangesAsync();
-        }
-        else if (action == Action.AttackCaravan)
-        {
-            Status = Condition.AttackCaravan;
-            await gameContext.SaveChangesAsync();
-            await Task.Delay(6000000);
-            Status = Condition.Chill; 
-        }
-    }
-
+    
     internal async Task StateToRtf()
     {
         using (var gameContext = new GameContext())
