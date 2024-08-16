@@ -1,19 +1,29 @@
-﻿namespace Chat_Warriors.Game.player_management;
+﻿using Chat_Warriors.BotService;
 
-public class EnergySystem
+namespace Chat_Warriors.Game.player_management;
+
+public static class EnergySystem
 {
-    private static readonly int _maxEnergy = 30;
-    private static readonly int _regenerateEnergy = 5;
+    private const int MaxEnergy = 30;
+    private const int RegenerateEnerg = 5;
 
-    public static async Task RegenerateEnergy(Player user,GameContext db)
+    public static async Task RegenerateEnergy(Player player)
     {
-        while (user.Energy < _maxEnergy)
-        {   
-            await Task.Delay(10000);
-            user.Energy += _regenerateEnergy;
-            await db.SaveChangesAsync();
+        using (var gameContext = new GameContext())
+        {
+            while (player.Energy < MaxEnergy)
+            {
+                await Task.Delay(300000);
+                await TelegramMessenger.SendMessageAsync(player.ChatId, "ПЛЮС");
+                player.Energy += RegenerateEnerg;
+                gameContext.Players.Update(player);
+                await gameContext.SaveChangesAsync();
+            }
+
+            await TelegramMessenger.SendMessageAsync(player.ChatId, "ЗАРЯЖЕН НА МАКСИМУМ");
+            player.Energy = MaxEnergy;
+            gameContext.Players.Update(player);
+            await gameContext.SaveChangesAsync();
         }
-        Console.WriteLine("МАКСИМАЛЬНАЯ ЭНЕРГИЯ");
-        user.Energy = _maxEnergy;
     }
 }

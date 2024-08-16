@@ -10,7 +10,7 @@ namespace Chat_Warriors.BotService
         {
             await using var db = new GameContext();
             var chatId = message.Chat.Id;
-            var currentPlayer = db.Players.SingleOrDefault(p => p.Username == message.Chat.Username);
+            var currentPlayer = db.Players.SingleOrDefault(p => p.UserName == message.Chat.Username);
             switch (message.Text)
             {
                 case "/start":
@@ -26,7 +26,7 @@ namespace Chat_Warriors.BotService
                     else
                     {
                         await TelegramMessenger.SendMessageAsync(chatId,
-                            $"\ud83c\udfb0 Name: \"{currentPlayer.Username}\" " +
+                            $"\ud83c\udfb0 Name: \"{currentPlayer.UserName}\" " +
                             $"\n\ud83c\udf15 Status: {currentPlayer.Status}" +
                             $"\n\ud83d\udd95 Level:{currentPlayer.Level} \n\ud83e\udd47 Gold: " +
                             $"{currentPlayer.Gold} \n\u26a1\ufe0f Energy: {currentPlayer.Energy}");
@@ -42,11 +42,13 @@ namespace Chat_Warriors.BotService
                         var newPlayer = new Player(message.Chat.Username!, chatId);
                         await db.Players.AddAsync(newPlayer);
                         await db.SaveChangesAsync();
-                        var addedPlayer = db.Players.SingleOrDefault(p => p.Username == message.Chat.Username);
+                        var addedPlayer = db.Players.SingleOrDefault(p => p.UserName == message.Chat.Username);
                         if (addedPlayer != null)
                         {
                             await TelegramMessenger.SendMessageAsync(chatId,
-                                $"Герой {newPlayer.Username} создан!");
+                                $"Герой {newPlayer.UserName} создан!");
+                            _ = Task.Run(() => EnergySystem.RegenerateEnergy(newPlayer));
+
                         }
                         else
                         {
@@ -64,7 +66,7 @@ namespace Chat_Warriors.BotService
                     {
                         try
                         {
-                            await Forest.GoToForest(currentPlayer, db);
+                            await Forest.GoToForest(currentPlayer);
                             await db.SaveChangesAsync();
                         }
                         catch (Exception ex)

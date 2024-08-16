@@ -11,5 +11,4 @@ public class GameContext: DbContext
     {
         optionsBuilder.UseSqlite("Data Source=C:/Users/temer/RiderProjects/Chat-Warriors/identifier.sqlite");
     }
-    
 }

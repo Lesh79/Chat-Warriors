@@ -1,26 +1,26 @@
-﻿// namespace Chat_Warriors.GameLogic.user_management;
+﻿// namespace Chat_Warriors.GameLogic.player_management;
 //
 // public class Inventory
 // {
-//     private Player _user;
+//     private Player _player;
 //
-//     public Inventory(Player user)
+//     public Inventory(Player player)
 //     {
-//         this._user = user;
+//         this._player = player;
 //     }
 //
 //     public void AddItem(Item item)
 //     {
-//         _user.Inventory.Add(item);
+//         _player.Inventory.Add(item);
 //     }
 //
 //     public void RemoveItem(Item item)
 //     {
-//         _user.Inventory.Remove(item);
+//         _player.Inventory.Remove(item);
 //     }
 //
 //     public List<Item> ListItems()
 //     {
-//         return _user.Inventory;
+//         return _player.Inventory;
 //     }
 // }

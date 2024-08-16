@@ -5,9 +5,9 @@ namespace Chat_Warriors.Game;
 
 public static class Forest
 {
-    public static async Task GoToForest(Player player, GameContext gameContext)
+    public static async Task GoToForest(Player player)
     {
-        await TelegramMessenger.SendMessageAsync(player.ChatId, $"Герой {player.Username} ушёл в лес!");
+        await TelegramMessenger.SendMessageAsync(player.ChatId, $"Герой {player.UserName} ушёл в лес!");
         if (player is { Energy: >= 10, Status: Condition.ReadyToFight })
         {
             player.Energy -= 10;
@@ -19,7 +19,8 @@ public static class Forest
         }
         else
         {
-            await TelegramMessenger.SendMessageAsync(player.ChatId, "Недостаточно энергии или игрок не готов к бою!");
+            await TelegramMessenger.SendMessageAsync(player.ChatId, 
+                "Недостаточно энергии или игрок не готов к бою!");
         }
     }
 
@@ -41,7 +42,8 @@ public static class Forest
                 await gameContext.SaveChangesAsync();
                 Console.WriteLine("Состояние игрока сохранено: Chill");
 
-                await TelegramMessenger.SendMessageAsync(player.ChatId, $"Герой {player.Username} вернулся из леса!");
+                await TelegramMessenger.SendMessageAsync(player.ChatId, 
+                    $"Герой {player.UserName} вернулся из леса!");
 
                 await player.StateToRtf();
             }

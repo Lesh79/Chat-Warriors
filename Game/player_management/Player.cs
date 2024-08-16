@@ -6,7 +6,7 @@ namespace Chat_Warriors.Game.player_management;
 public class Player
 {
     [Key]
-    public string Username { get; set; }
+    public string UserName { get; set; }
     public long ChatId { get; set; }
     public Condition Status { get; set; } 
     public int Level { get; set; }
@@ -15,9 +15,9 @@ public class Player
     public int Energy { get; set; }
     // public List<Item> Inventory { get; set; }
 
-    public Player(string username, long chatId)
+    public Player(string userName, long chatId)
     {
-        Username = username;
+        UserName = userName;
         ChatId = chatId;
         Status = Condition.ReadyToFight;
         Level = 0;
@@ -38,7 +38,6 @@ public class Player
             await gameContext.SaveChangesAsync();
             await Task.Delay(6000000);
             Status = Condition.Chill; 
-            // TODO: переписать эту строку в другое место
         }
     }
 
@@ -75,7 +74,7 @@ public class Player
     {
         Exp -= GetRequiredExpForNextLevel();
         Level++;
-        await TelegramMessenger.SendMessageAsync(ChatId, $"Поздравляем! {Username} достиг нового уровня {Level}.");
+        await TelegramMessenger.SendMessageAsync(ChatId, $"Поздравляем! {UserName} достиг нового уровня {Level}.");
     }
     
 }
