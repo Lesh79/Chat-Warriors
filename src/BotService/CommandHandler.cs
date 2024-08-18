@@ -16,13 +16,18 @@ namespace Chat_Warriors.BotService
                 case "/start":
                 {
                     await TelegramMessenger.SendMessageAsync(chatId,
-                        $"Доступные команды:\n- /create\n- /hero\n- /forest\n- /attack");
+                        $"\ud83c\udfb0Доступные команды\ud83c\udfb0:\n- " +
+                        $"/create\ud83d\udc4b\n- " +
+                        $"/hero\ud83e\udef5\n- " +
+                        $"/forest\ud83c\udf32\n- " +
+                        $"/attack\ud83e\uddbe\n- " +
+                        $"/delete\ud83d\udc40");
                     break;
                 }
                 case "/hero":
                 {
                     if (currentPlayer == null)
-                        await TelegramMessenger.SendMessageAsync(chatId, "Создай персонажа!");
+                        await TelegramMessenger.SendMessageAsync(chatId, "Создай персонажа!\ud83e\udd76");
                     else
                     {
                         await TelegramMessenger.SendMessageAsync(chatId,
@@ -47,15 +52,15 @@ namespace Chat_Warriors.BotService
                         {
                             await TelegramMessenger.SendMessageAsync(chatId,
                                 $"Герой {newPlayer.UserName} создан!");
-                            _ = Task.Run(() => EnergySystem.RegenerateEnergy(newPlayer));
-
+                            _ = Task.Run(() => EnergySystem.StartRegenerateEnergy(newPlayer));
                         }
                         else
                         {
-                            await TelegramMessenger.SendMessageAsync(chatId, "Ошибка при создании персонажа!");
+                            await TelegramMessenger.SendMessageAsync(chatId,
+                                "Ошибка при создании персонажа!\ud83e\udd15");
                         }
                     }
-                    else await TelegramMessenger.SendMessageAsync(chatId, "Персонаж уже существует");
+                    else await TelegramMessenger.SendMessageAsync(chatId, "Персонаж уже существует!\ud83d\udc7b");
 
                     break;
                 }
@@ -66,25 +71,51 @@ namespace Chat_Warriors.BotService
                     {
                         try
                         {
-                            await Forest.GoToForest(currentPlayer);
+                            await Forest.GoTo(currentPlayer);
                             await db.SaveChangesAsync();
                         }
                         catch (Exception ex)
                         {
                             Console.WriteLine($"Ошибка сохранения в базу данных: {ex.Message}");
-                            await TelegramMessenger.SendMessageAsync(chatId, 
-                                "Произошла ошибка при сохранении данных.");
+                            await TelegramMessenger.SendMessageAsync(chatId,
+                                "Произошла ошибка при сохранении данных." +
+                                "Напишите разработчику @Lesh77\ud83d\ude91");
                         }
                     }
                     else
                     {
                         await TelegramMessenger.SendMessageAsync(chatId,
-                            $"Персонаж не найден! Создайте персонажа командой 'создать персонажа'");
+                            $"Персонаж не найден! Создайте персонажа командой 'создать персонажа");
                     }
 
                     break;
                 }
                 case "/attack":
+                {
+                    if (currentPlayer != null)
+                    {
+                        try
+                        {
+                            await Caravan.GoTo(currentPlayer);
+                            await db.SaveChangesAsync();
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"Ошибка сохранения в базу данных: {ex.Message}");
+                            await TelegramMessenger.SendMessageAsync(chatId,
+                                "Произошла ошибка при сохранении данных. " +
+                                "Напишите разработчику @Lesh77\ud83d\ude91");
+                        }
+                    }
+                    else
+                    {
+                        await TelegramMessenger.SendMessageAsync(chatId,
+                            "Персонаж не найден! Создайте персонажа командой '/create'\ud83d\ude05");
+                    }
+
+                    break;
+                }
+                case "/delete":
                 {
                     if (currentPlayer != null) db.Players.Remove(currentPlayer);
                     await db.SaveChangesAsync();

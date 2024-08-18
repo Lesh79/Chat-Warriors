@@ -7,8 +7,3 @@ public enum Condition
     ReadyToFight,
     Chill,
 }
-public enum Action
-{
-    GoToForest,
-    AttackCaravan,
-}

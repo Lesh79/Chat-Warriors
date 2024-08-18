@@ -36,6 +36,7 @@ public class Player
                 Status = Condition.ReadyToFight;
                 gameContext.Players.Update(this);
                 await gameContext.SaveChangesAsync();
+                Console.WriteLine($"Состояние игрока {UserName} сохранено: ReadyToFight");
                 await TelegramMessenger.SendMessageAsync(ChatId, "ГОТОВ ПИЗДИТЬСЯ");
             }
         }
