@@ -14,10 +14,9 @@ namespace Chat_Warriors.Migrations
                 name: "Players",
                 columns: table => new
                 {
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
                     Username = table.Column<string>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "TEXT", nullable: false),
+                    ChatId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
                     Level = table.Column<int>(type: "INTEGER", nullable: false),
                     Exp = table.Column<int>(type: "INTEGER", nullable: false),
                     Gold = table.Column<int>(type: "INTEGER", nullable: false),
@@ -25,7 +24,7 @@ namespace Chat_Warriors.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Players", x => x.UserId);
+                    table.PrimaryKey("PK_Players", x => x.Username);
                 });
         }
 

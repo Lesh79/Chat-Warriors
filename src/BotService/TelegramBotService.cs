@@ -8,12 +8,11 @@ namespace Chat_Warriors.BotService
     public class TelegramBotService
     {
         private readonly ITelegramBotClient _botClient;
-        private readonly CommandHandler _commandHandler;
 
         public TelegramBotService(string token)
         {
             _botClient = new TelegramBotClient(token);
-            _commandHandler = new CommandHandler(_botClient);
+            TelegramMessenger.Initialize(_botClient);
         }
 
         public void Start()
@@ -38,17 +37,19 @@ namespace Chat_Warriors.BotService
             cts.Cancel(); // Stop the bot when closing the application
         }
 
-        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
+            CancellationToken cancellationToken)
         {
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(update));
 
             if (update.Type == UpdateType.Message && update.Message?.Text != null)
             {
-                await _commandHandler.HandleCommandAsync(update.Message);
+                await CommandHandler.HandleCommandAsync(update.Message);
             }
         }
 
-        private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        private Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, 
+            CancellationToken cancellationToken)
         {
             Console.WriteLine(Newtonsoft.Json.JsonConvert.SerializeObject(exception));
             return Task.CompletedTask;
